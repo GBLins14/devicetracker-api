@@ -1,0 +1,13 @@
+spring:
+  mongodb:
+    uri: ${MONGO_URI:mongodb://localhost:27017/devicetracker}
+
+  threads:
+    virtual:
+      enabled: true
+
+security:
+  api-key: ${INTERNAL_API_KEY}
+
+server:
+  port: 8080
