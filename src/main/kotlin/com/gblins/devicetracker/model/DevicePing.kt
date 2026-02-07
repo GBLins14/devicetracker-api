@@ -2,6 +2,7 @@ package com.gblins.devicetracker.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
 import java.time.LocalDateTime
 
 @Document(collection = "pings")
@@ -10,7 +11,7 @@ data class DevicePing(
     val id: String? = null,
     val deviceId: String,
     val firmwareVersion: String,
-    val timestamp: LocalDateTime,
+    var timestamp: Instant = Instant.now(),
     val latitude: Double,
     val longitude: Double
 )

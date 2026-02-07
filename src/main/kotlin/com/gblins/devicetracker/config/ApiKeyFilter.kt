@@ -11,13 +11,16 @@ import reactor.core.publisher.Mono
 
 @Component
 class ApiKeyFilter : WebFilter {
+    @Value("\${security.api-key-get:}") // API KEY pata rotas GET.
+    private var getApiKey: String = ""
 
-    @Value($$"${security.api-key}")
-    private lateinit var secretKey: String
+    @Value("\${security.api-key-post:}") // API KEY pata rotas POST.
+    private var postApiKey: String = ""
 
     // Lista com as rotas protegidas e seus métodos HTTP.
     private val protectedRoutes = listOf(
-        "/api/v1/pings" to HttpMethod.GET
+        "/api/v1/pings" to HttpMethod.GET,
+        "/api/v1/pings" to HttpMethod.POST
     )
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
@@ -29,9 +32,15 @@ class ApiKeyFilter : WebFilter {
         }
 
         if (isProtected) {
+            val expectedKey = when (requestMethod) {
+                HttpMethod.GET -> getApiKey
+                HttpMethod.POST -> postApiKey
+                else -> ""
+            }
+
             val apiKeyHeader = exchange.request.headers.getFirst("X-API-KEY")
 
-            if (apiKeyHeader == null || apiKeyHeader != secretKey) {
+            if (expectedKey.isBlank() || apiKeyHeader == null || apiKeyHeader != expectedKey) {
                 exchange.response.statusCode = HttpStatus.UNAUTHORIZED
                 return exchange.response.setComplete()
             }
