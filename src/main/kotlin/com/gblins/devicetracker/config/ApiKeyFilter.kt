@@ -11,10 +11,10 @@ import reactor.core.publisher.Mono
 
 @Component
 class ApiKeyFilter : WebFilter {
-    @Value("\${security.api-key-get:}") // API KEY pata rotas GET.
+    @Value("\${security.api-key-get:}") // API KEY para rotas GET.
     private var getApiKey: String = ""
 
-    @Value("\${security.api-key-post:}") // API KEY pata rotas POST.
+    @Value("\${security.api-key-post:}") // API KEY para rotas POST.
     private var postApiKey: String = ""
 
     // Lista com as rotas protegidas e seus métodos HTTP.
